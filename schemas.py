@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr
 from datetime import datetime
 from typing import Optional
 
@@ -21,5 +21,36 @@ class PatientCreate(BaseModel):
 
 class PatientOut(PatientCreate):
     id: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+class SignupIn(BaseModel):
+    email: EmailStr
+    password: str
+
+class LoginIn(BaseModel):
+    email: EmailStr
+    password: str
+
+class AuthOut(BaseModel):
+    user_id: int
+    email: str
+    is_onboarded: bool
+
+class OnboardingIn(BaseModel):
+    full_name: str
+    age: int
+    gender: str
+    city: str
+    typical_bp_systolic: float
+    typical_bp_diastolic: float
+    typical_heart_rate: float
+    known_diseases: str
+    current_medications: str
+    emergency_contact_email: EmailStr
+
+class OnboardingOut(OnboardingIn):
+    id: int
+    user_id: int
 
     model_config = ConfigDict(from_attributes=True)

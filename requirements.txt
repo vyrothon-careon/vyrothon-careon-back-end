@@ -5,3 +5,5 @@ asyncpg
 alembic
 python-dotenv
 pydantic
+bcrypt
+email-validator
