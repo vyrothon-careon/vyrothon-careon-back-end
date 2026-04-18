@@ -1,13 +1,20 @@
 """
 Care-On AI — Gemini-Powered Health Advice Generator
 Uses Gemini 2.5 Flash for warm, elderly-friendly health guidance.
-Falls back to static advice if the API is unavailable.
+Falls back to static advice if the API is unavailable or times out.
 """
 
 import os
+import logging
 from dotenv import load_dotenv
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 
 load_dotenv()
+
+logger = logging.getLogger(__name__)
+
+# Gemini API timeout in seconds
+GEMINI_TIMEOUT = 10
 
 # ── Gemini client ──────────────────────────────────────────────────────────────
 _client = None
@@ -97,11 +104,21 @@ Keep it under 80 words. Be warm like a caring family member."""
 
     try:
         client = _get_client()
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=prompt,
-        )
+
+        # Run Gemini call with a timeout to prevent infinite hangs
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            future = pool.submit(
+                client.models.generate_content,
+                model="gemini-2.5-flash",
+                contents=prompt,
+            )
+            response = future.result(timeout=GEMINI_TIMEOUT)
+
         return response.text
+
+    except FuturesTimeoutError:
+        logger.warning("Gemini advice timed out after %ds, using fallback", GEMINI_TIMEOUT)
+        return _fallback_advice(vitals)
     except Exception as e:
-        print(f"⚠️  Gemini API error (falling back to static advice): {e}")
+        logger.warning("Gemini API error, falling back to static advice: %s", e)
         return _fallback_advice(vitals)

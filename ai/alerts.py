@@ -3,6 +3,9 @@ Care-On AI — Rule-Based Vital Sign Alert Engine
 Thresholds calibrated to AHA (US) / NICE (UK) clinical guidelines.
 """
 
+# Severity ranking — used by _escalate to ensure alert level only goes up
+_PRIORITY = {"normal": 0, "warning": 1, "critical": 2}
+
 
 def check_alert(vitals: dict) -> dict:
     """
@@ -19,8 +22,7 @@ def check_alert(vitals: dict) -> dict:
 
     def _escalate(new_level: str):
         nonlocal level
-        priority = {"normal": 0, "warning": 1, "critical": 2}
-        if priority.get(new_level, 0) > priority.get(level, 0):
+        if _PRIORITY.get(new_level, 0) > _PRIORITY.get(level, 0):
             level = new_level
 
     # ── Blood Pressure — Systolic ──────────────────────────────────────────
