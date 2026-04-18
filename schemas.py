@@ -15,6 +15,20 @@ class VitalOut(VitalIn):
 
     model_config = ConfigDict(from_attributes=True)
 
+class UserVitalIn(BaseModel):
+    bp_systolic: float
+    bp_diastolic: float
+    sugar: float
+    heart_rate: float
+    weight: Optional[float] = None
+
+class UserVitalOut(UserVitalIn):
+    id: int
+    user_id: int
+    date: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
 class PatientCreate(BaseModel):
     name: str
     age: int

@@ -35,6 +35,22 @@ class User(Base):
     is_onboarded = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.now)
 
+    user_vitals = relationship("UserVitalReading", back_populates="user", cascade="all, delete-orphan")
+
+class UserVitalReading(Base):
+    __tablename__ = "user_vital_readings"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    date = Column(DateTime, default=datetime.now)
+    bp_systolic = Column(Float)
+    bp_diastolic = Column(Float)
+    sugar = Column(Float)
+    heart_rate = Column(Float)
+    weight = Column(Float, nullable=True)
+
+    user = relationship("User", back_populates="user_vitals")
+
 class HealthProfile(Base):
     __tablename__ = "health_profiles"
 
