@@ -4,7 +4,6 @@ from contextlib import asynccontextmanager
 
 from database import engine, Base
 from routers.health import router as health_router
-from routers.vitals import router as vitals_router
 from routers.auth import router as auth_router
 from routers.onboarding import router as onboarding_router
 from routers.user_vitals import router as user_vitals_router
