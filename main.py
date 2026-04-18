@@ -23,9 +23,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_methods=["*"],
     allow_headers=["*"],
-    allow_origins=["http://localhost:8081"],
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$",
     allow_credentials=True,
-
 )
 
 app.include_router(health_router, prefix="/api")
