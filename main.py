@@ -21,7 +21,6 @@ app = FastAPI(title="VitalWatch API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
     allow_origins=["http://localhost:8081"],
