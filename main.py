@@ -27,7 +27,6 @@ app.add_middleware(
 )
 
 app.include_router(health_router, prefix="/api")
-app.include_router(vitals_router, prefix="/api")
 app.include_router(auth_router, prefix="/api")
 app.include_router(onboarding_router, prefix="/api")
 app.include_router(user_vitals_router, prefix="/api")
